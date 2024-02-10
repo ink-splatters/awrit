@@ -61,3 +61,6 @@ build/
 # CEF
 DawnCache/
 GPUCache/
+.direnv
+.DS_Store
+/.pre-commit-config.yaml
