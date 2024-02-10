@@ -22,16 +22,16 @@ brew install chase/tap/awrit
 
 ## Building
 
-**Prerequisites**
+### Prerequisites
 
 - CMake v3.22 or newer
 - [Ninja](https://github.com/ninja-build/ninja/releases)
 
-**Linux**:
+#### Linux
 
 - Install these packages: `build-essential ninja-build cmake`
 
-**macOS**:
+#### macOS
 
 - Xcode 14.3, try [xcodes](https://github.com/XcodesOrg/xcodes)
 - Brew: `brew install ninja cmake`

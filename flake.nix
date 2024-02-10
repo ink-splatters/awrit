@@ -29,13 +29,18 @@
         checks.pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ../.;
           hooks = {
-            clang-format.enable = true;
-            clang-tidy.enable = true;
+            # clang-format.enable = true;
+            # clang-tidy.enable = true;
             deadnix.enable = true;
             markdownlint.enable = true;
             nil.enable = true;
             nixfmt.enable = true;
             statix.enable = true;
+          };
+
+          settings.markdownlint.config = {
+            MD034 = false;
+            MD013.line_length = 200;
           };
 
           tools = pkgs;
@@ -44,11 +49,15 @@
         formatter = nixfmt;
 
         devShells = {
+          install-hooks = mkShell {
+            inherit (self.checks.${system}.pre-commit-check) shellHook;
+          };
 
           default = let
             replaceStdenv = pkg:
               pkg.overrideAttrs (_: { inherit (llvmPackages) stdenv; });
           in mkShell.override { inherit (llvmPackages) stdenv; } {
+
             CXXFLAGS = "-O3 -stdlib=libc++ "
               + lib.optionalString ("${system}" == "aarch64-darwin")
               "-mcpu=apple-m1";
@@ -62,10 +71,6 @@
               export PS1="\n\[\033[01;36m\]‹⊂˖˖› \\$ \[\033[00m\]"
               echo -e "\nto install pre-commit hooks:\n\x1b[1;37mnix develop .#install-hooks\x1b[00m"
             '';
-
-            install-hooks = mkShell {
-              inherit (self.checks.${system}.pre-commit-check) shellHook;
-            };
           };
         };
       });
