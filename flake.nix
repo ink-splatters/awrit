@@ -22,56 +22,23 @@
 
   outputs = { nixpkgs, flake-utils, pre-commit-hooks, self, ... }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
 
-      in with pkgs; {
+        inherit (pkgs) callPackage;
 
-        checks.pre-commit-check = pre-commit-hooks.lib.${system}.run {
-          src = ../.;
-          hooks = {
-            # clang-format.enable = true;
-            # clang-tidy.enable = true;
-            deadnix.enable = true;
-            markdownlint.enable = true;
-            nil.enable = true;
-            nixfmt.enable = true;
-            statix.enable = true;
-          };
+        common = callPackage ./nix/common.nix { inherit system; };
+      in {
 
-          settings.markdownlint.config = {
-            MD034 = false;
-            MD013.line_length = 200;
-          };
+        checks =
+          import ./nix/checks.nix { inherit pkgs pre-commit-hooks system; };
 
-          tools = pkgs;
-        };
+        formatter = pkgs.nixfmt;
 
-        formatter = nixfmt;
+        devShells =
+          import ./nix/shells.nix { inherit pkgs common self system; };
 
-        devShells = {
-          install-hooks = mkShell {
-            inherit (self.checks.${system}.pre-commit-check) shellHook;
-          };
+        packages = import ./nix/packages { };
 
-          default = let
-            replaceStdenv = pkg:
-              pkg.overrideAttrs (_: { inherit (llvmPackages) stdenv; });
-          in mkShell.override { inherit (llvmPackages) stdenv; } {
-
-            CXXFLAGS = "-O3 -stdlib=libc++ "
-              + lib.optionalString ("${system}" == "aarch64-darwin")
-              "-mcpu=apple-m1";
-
-            LDFLAGS = "-fuse-ld=lld -stdlib=libc++";
-
-            nativeBuildInputs = [ ccache cmake ninja lld ]
-              ++ [ (replaceStdenv xcodebuild) ];
-
-            shellHook = self.checks.${system}.pre-commit-check.shellHook + ''
-              export PS1="\n\[\033[01;36m\]‹⊂˖˖› \\$ \[\033[00m\]"
-              echo -e "\nto install pre-commit hooks:\n\x1b[1;37mnix develop .#install-hooks\x1b[00m"
-            '';
-          };
-        };
       });
 }
