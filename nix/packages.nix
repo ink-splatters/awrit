@@ -4,6 +4,8 @@ in {
 
   default = stdenv.mkDerivation {
 
+    inherit (common) name CFLAGS CXXFLAGS LDFLAGS nativeBuildInputs buildInputs;
+
     src = ./.;
 
     cmakeFlags = [ ];
@@ -21,6 +23,6 @@ in {
 
     enableParallelBuilding = true;
 
-  } // common;
+  };
 
 }

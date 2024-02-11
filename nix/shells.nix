@@ -4,7 +4,7 @@ in {
 
   default = mkShell.override { inherit (llvmPackages) stdenv; } {
 
-    inherit (common) name CFLAGS CXXFLAGS LDFLAGS nativeBuildInputs;
+    inherit (common) name CFLAGS CXXFLAGS LDFLAGS nativeBuildInputs buildInputs;
 
     shellHook = ''
       export PS1="\n\[\033[01;36m\]‹⊂˖˖› \\$ \[\033[00m\]"

@@ -38,7 +38,6 @@
         devShells =
           import ./nix/shells.nix { inherit pkgs common self system; };
 
-        packages = import ./nix/packages { };
-
+        packages = import ./nix/packages.nix { inherit pkgs common; };
       });
 }
