@@ -17,6 +17,8 @@ if(POLICY CMP0135)
 endif()
 
 set(CEF_VERSION 120.1.10+g3ce3184+chromium-120.0.6099.129)
+set(GTEST_VERSION v1.13.0)
+SET(GTEST_SHA bfa4b5131b6eaac06962c251742c96aab3f7aa78)
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
   set(OS_MAC 1)
@@ -112,8 +114,16 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cef_src)
 
+# gtest v1.13.0
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/${GTEST_VERSION}.tar.gz
+  URL_HASH SHA1=${GTEST_SHA}
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 set(INSTALL_GTEST OFF)
+FetchContent_MakeAvailable(googletest)
 
 # Use folders in the resulting project files.
 set_property(GLOBAL PROPERTY OS_FOLDERS ON)
