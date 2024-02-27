@@ -1,7 +1,11 @@
 { pkgs, lib, system, ... }:
+with pkgs;
 let
 
-  inherit (pkgs.darwin.apple_sdk) frameworks;
+  inherit (darwin.apple_sdk) frameworks;
+
+  replaceStdenv = pkg:
+    pkg.overrideAttrs (_: { inherit (llvmPackages) stdenv; });
 
 in rec {
   name = "awrit";
@@ -11,6 +15,8 @@ in rec {
   CXXFLAGS = "${CFLAGS}";
   LDFLAGS = "-fuse-ld=lld";
 
-  nativeBuildInputs = with pkgs; [ cmake ninja gitMinimal lld ];
+  nativeBuildInputs = [ cmake ninja gitMinimal lld ]
+    ++ [ (replaceStdenv xcodebuild) ];
   buildInputs = with frameworks; [ Cocoa AppKit ];
 }
+
