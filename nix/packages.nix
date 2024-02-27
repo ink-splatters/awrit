@@ -4,13 +4,13 @@
 
     inherit (common) name CFLAGS CXXFLAGS nativeBuildInputs buildInputs;
 
-    src = ./.;
+    src = ../.;
 
     cmakeFlags = [ ];
 
     buildPhase = ''
       mkdir build
-      cmake -GNinja -DCMAKE_BUILD_TYPE=Release -S $src -B build
+      cmake -GNinja -DCMAKE_BUILD_TYPE=Release -S . -B build
       cmake --build build
     '';
 
