@@ -16,6 +16,7 @@ Yep, actual Chromium being rendered in your favorite terminal that supports the 
 - Add fancy UI using web technologies, so NeoVim can pretend it is Emacs instead of the other way around
 
 ## Installing from Brew (macOS only)
+
 ```bash
 brew install chase/tap/awrit
 ```
@@ -45,6 +46,40 @@ cmake --build build
 
 # The resulting build will be located in build/awrit/Release
 # The build can be run from the top-level directory with ./build/awrit/Release/awrit
+```
+
+### Using Nix
+
+#### Prerequisites for Nix
+
+- nix with flakes enabled
+
+```bash
+cat <<EOF >> ~/.config/nix/nix.conf
+
+experimental-features = nix-flake command
+trusted-users = root $(whoami)
+
+EOF
+```
+
+On the moment the build is _almost_ Xcode independent: the only annoying dependency
+on Xcode is `ibtool` required to process Interface Builder files.
+
+This likely cannot be worked around ( `ibtool` is closed source, and anyway -
+Apple License prohibits bundling their stuff), which means it's more efficient
+to use Xcode for everything (TODO).
+
+---
+
+```bash
+nix build --impure --accept-flake-config
+```
+
+or install using:
+
+```bash
+nix install --impure --accept-flake-config
 ```
 
 ## Installing from Source

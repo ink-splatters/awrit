@@ -1,8 +1,8 @@
 { pkgs, common, self, stdenv, system }:
-let inherit (pkgs)  mkShell;
+let inherit (pkgs) mkShell;
 in {
 
-  default = mkShell.override { inherit  stdenv; } {
+  default = mkShell.override { inherit stdenv; } {
 
     inherit (common) name CFLAGS CXXFLAGS LDFLAGS nativeBuildInputs buildInputs;
 
@@ -14,6 +14,5 @@ in {
 
   install-hooks =
     mkShell { inherit (self.checks.${system}.pre-commit-check) shellHook; };
-  }
-
+}
 

@@ -13,7 +13,7 @@ in rec {
   LDFLAGS = "-fuse-ld=lld";
 
   nativeBuildInputs = [ cmake ninja gitMinimal clang_17 libcxx bintools lld_17 ]
-    ++ [ (xcodebuild.override{ inherit stdenv;}) ];
+    ++ [ (xcodebuild.override { inherit stdenv; }) ];
   buildInputs = with frameworks; [ Cocoa AppKit ];
 }
 

@@ -1,4 +1,4 @@
-{ pkgs, common, stdenv, ... }: {
+{ common, stdenv, ... }: {
 
   default = stdenv.mkDerivation {
 
@@ -10,7 +10,7 @@
 
     buildPhase = ''
       mkdir build
-      cmake -GNinja -DCMAKE_BUILD_TYPE=Release -S . -B build
+      cmake -GNinja -DCMAKE_BUILD_TYPE=Release -S $src -B build
       cmake --build build
     '';
 
@@ -19,7 +19,7 @@
       cmake --install build --prefix=$out
     '';
 
-    LDFLAGS=common.LDFLAGS + " -L$src/tbd";
+    LDFLAGS = common.LDFLAGS + " -L$src/tbd";
 
     enableParallelBuilding = true;
 

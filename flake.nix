@@ -1,7 +1,6 @@
 {
   description = "basic cpp development shell";
 
-  
   inputs = {
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
     systems.url = "github:nix-systems/default";
@@ -33,7 +32,9 @@
         inherit (pkgs) callPackage;
         inherit (pkgs.llvmPackages_17) stdenv bintools libcxx;
 
-        common = callPackage ./nix/common.nix { inherit stdenv system bintools libcxx; };
+        common = callPackage ./nix/common.nix {
+          inherit stdenv system bintools libcxx;
+        };
       in {
 
         checks =
