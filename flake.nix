@@ -31,8 +31,9 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
         inherit (pkgs) callPackage;
+        inherit (pkgs.llvmPackages_17) stdenv bintools libcxx;
 
-        common = callPackage ./nix/common.nix { inherit system; };
+        common = callPackage ./nix/common.nix { inherit stdenv system bintools libcxx; };
       in {
 
         checks =
@@ -41,8 +42,8 @@
         formatter = pkgs.nixfmt;
 
         devShells =
-          import ./nix/shells.nix { inherit pkgs common self system; };
+          import ./nix/shells.nix { inherit pkgs common self system stdenv; };
 
-        packages = import ./nix/packages.nix { inherit pkgs common; };
+        packages = import ./nix/packages.nix { inherit pkgs common stdenv; };
       });
 }

@@ -1,10 +1,8 @@
-{ pkgs, common, ... }:
-let inherit (pkgs.llvmPackages) stdenv;
-in {
+{ pkgs, common, stdenv, ... }: {
 
   default = stdenv.mkDerivation {
 
-    inherit (common) name CFLAGS CXXFLAGS LDFLAGS nativeBuildInputs buildInputs;
+    inherit (common) name CFLAGS CXXFLAGS nativeBuildInputs buildInputs;
 
     src = ./.;
 
@@ -12,7 +10,7 @@ in {
 
     buildPhase = ''
       mkdir build
-      cmake -GNinja -DCMAKE_BUILD_TYPE=Release -S . -B build
+      cmake -GNinja -DCMAKE_BUILD_TYPE=Release -S $src -B build
       cmake --build build
     '';
 
@@ -20,6 +18,8 @@ in {
       mkdir -p $out
       cmake --install build --prefix=$out
     '';
+
+    LDFLAGS=common.LDFLAGS + " -L$src/tbd";
 
     enableParallelBuilding = true;
 
